@@ -1,4 +1,4 @@
-#### Project 3
+#### Project
 # Hair Salon
 - This is a group project. Through GitHub Classroom you should have created a shared GitHub repository with your group members, so as long as you upload your finished code to that group repository, each member in your team will get credit. You will also need to fill out a peer review survey on Learning Suite to recieve credit.
 - I do not provide automated tests for projects. You will need to determine yourself whether the code meets the requirements provided in the rubric. After you turn in your code, a combination of autograding and manual grading will be done (meaning partial credit may be given for certain requirements). The TAs will update the `Rubric.md` file with your grade and any comments that they have.
@@ -26,7 +26,7 @@
     - For datetime, I recommend just using this: `from datetime import datetime`
 
 ## Part 1: Creating a database and classes with peewee
-- Write all your code for part 1 in the `p3_db_classes.py` file
+- Write all your code for part 1 in the `p03_db_classes.py` file
 - Using `peewee`, create an SQLite database called `hair_salon.db`. Make sure you store the `SqliteDatabase` object in a variable.
 - Your database should contain 3 tables: `Customer`, `Stylist`, and `Appointment`, meaning you need to create 3 classes with the same name that inherit from the `peewee` class `Model`.
 - Eventually, in Part 2 of the project, you are going to fill the database with data from the provided Excel file. Part 2 will be much easier if you keep the column names consistent in your classes and what you call them when you import them in Part 2. Suggested column names are provided below, but you could technically rename them. Do whatever you find easiest.
@@ -55,9 +55,9 @@
     - The function should run the `.connect()` method on your `SqliteDatabase` object.
     - Then, the function should run the .`create_tables()` method on you `SqliteDatabase` object and create your `Customer`, `Stylist`, and `Appointment` tables.
     - Your function should then return the `SqliteDatabase` object.
-    - You'll call this function in all of the other python files you make in the project, so that you have access to the database each time
+    - You'll call this function at the beginning of your `p03_data_import.py` file in part 2.
 - Optional, but recommended:
-    - You can also write a function called `start_from_scratch()` that deletes all the tables in your database. I'd recommend writing this just so that in part 2 as you are testing your code you don't have to manually delete your database as you are getting it to work. It also will prevent you from inserting in duplicate data if you run your code multiple times. I'll give you the code here. This assumes you called your `SqliteDatabase` object `db`.:
+    - You can also write a function called `start_from_scratch()` that deletes all the tables in your database. I'd recommend writing this just so that in part 2 as you are testing your code you don't have to manually delete your database as you are getting it to work. It also will prevent you from inserting in duplicate data if you run your code multiple times. I'll give you the code here. This code assumes you called your `SqliteDatabase` object `db`.:
     - ```
       def start_from_scratch():
           """
@@ -74,7 +74,7 @@
       ```
 ## Part 2: Importing data from Excel into your database
 - Note: Read this whole section before starting to code. I give you very specific hints at the bottom of this section.
-- Write all your code for part 2 in the `p3_data_import.py` file.
+- Write all your code for part 2 in the `p03_data_import.py` file.
 - Start by importing the `starting_hair_salon_data.xlsx` file into a pandas DataFrame. This is a representation of the data that Incredible Cuts is giving you to start out with. If you were to print out this DataFrame, the first 5 rows would look like this:
     - ![starting dataframe](media/starting_df.png)
 - If you look through the Excel file, you'll notice that each row represents an appointment, but that we are repeating customer and stylist info mutliple times each time they have an appointment. That is a waste of memory, and is prone to errors when entering data.
@@ -93,7 +93,7 @@
 - **Appointment DataFrame**:
     - It should have 1000 rows (no duplicates need to be removed). Notice the creation of a column called `a_id`, as well as the presence of `c_id` and `s_id`. Each appointment needs a unique id `a_id`, and also foreign keys for Customer `c_id` and Stylist `s_id` that corresponds to the primary keys of Customer and Stylist.
     - ![appointment dataframe](media/appointments_df.png)`
-- Once you have your 3 separate DataFrames, use the `start_from_scratch()` function (if you wrote it) and then the `initialize_databas()` function from your `db_classes.py` file to get a `SqliteDatabase` object. Use that object when you call `.to_sql()` on each of your 3 DataFrames so that you can insert the data into your database.
+- Once you have your 3 separate DataFrames, use the `start_from_scratch()` function (if you wrote it) and then the `initialize_database()` function from your `db_classes.py` file to get a `SqliteDatabase` object. Use that object when you call `.to_sql()` on each of your 3 DataFrames so that you can insert the data into your database.
 ####  VERY SPECIFIC HINTS FOR PART 2 (one possible logical flow, e.g. the way Prof. Steffen might do it):
 - Import the original Excel file as a DataFrame (I refer to it as `combined_df` in the steps below)
 - Make the Customer DataFrame:
@@ -125,6 +125,7 @@
     - The easiest way to do this is just using the str function `.replace()`.
     - Here's an example of replacing 'M' with 'Male' in the `c_gender` column. Don't actually do this, just try and see how you could apply this logic to the `c_phone_number` column to get rid of the `-`s in the column.
         - `c_df['c_gender'] = c_df['c_gender'].str.replace("M", "Male")`
+    - I recommend you don't do this until after you've run the code to create your appointments dataframe.
 - Export your data to your SQLite database
     - Using the connected SqliteDatabase object from your `initialize_database()` function (which I just call `db`), send your DataFrame data to your database. Make sure you send the Customer and Stylist data first before the Appointment data (since the primary keys need exist before the foreign keys)
     - ```
@@ -134,12 +135,13 @@
       ```
     - Running the above code will likely give you this warning in the terminal:
         - `UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.`
-        - You can just ignore this. Peewee isn't officially tested with Pandas, but it works just fine so you can safely ignore the warning.
+        - You can just ignore this. Peewee isn't officially tested with Pandas, but it works just fine so you can safely ignore the warning. You could also just use the sqlite3 library with `db = sqlite3.connect('hair_salon.db')` and that would also get rid of the warning, since you're using the accepted sqlite3 library to connect.
 
 ## Part 3: Check In Process
 - The point of this file is to simulate the check in process for a customer as a they walk in to the hair salon. Customers will enter in their phone number to check in. If the phone number is in the database, they are recognized as a returning customer and can choose to use their previously stored data. Otherwise, they are a new customer and more info will be gathered about them.
-- Write all your code for part 3 in the `p3_check_in.py` file.
-- This file should import `initialize_database, Customer, Stylist, Appointment` from your `p3_db_classes.py` file. 
+- You can see the `check_in_process.pdf` file for an overview of the logical flow of this file. I recommend looking over it. It doesn't show every detail of each printed message & input message, but it shows the general logic of when you should be asking for information, when to create new customers, when to ask for hair styles/stylist preferences, etc.
+- Write all your code for part 3 in the `p03_check_in.py` file.
+- This file should import Customer, Stylist, Appointment` from your `p3_db_classes.py` file. 
 1. Ask user to enter in a 10-digit phone number:
     - `Hello! Welcome to Incredible Cuts. Please enter your phone number to check in: `
     - Note: To make this easier to test, I included a customer with 3 appointments that has the phone number `1234567890`
@@ -151,8 +153,8 @@
         - `123-456-7890`
      - > **Hint**: Here are 3 potential ways you might check the input:
         > -  Use `.replace()` multiple times to get rid of spaces and dashes.
-        > - Try and convert each character of the input to an `int()`. Only keep the characters that are capable of becoming ints.
-        > - Check whether `.isdigit()` returns `True` for each character of the input, and only keep those characters.
+        > - Try to convert each character of the input to an `int()` (using try/except). Only keep the characters that are capable of becoming ints.
+        > - Check whether `.isdecimal()` returns `True` for each character of the input, and only keep those characters.
     - Any input that doesn't include 10 digits should be rejected, and you should ask the user to reinput the number.
         - For example, if the user enters something like this:
             - `123`
@@ -162,7 +164,7 @@
 
 2. If phone number is in the database, get that customer as an object
     - If the phone number corresponds to an existing customer in the database, retrieve that customer as a `Customer` object. Otherwise, you'll create a new customer object (described in section 3)
-    - Call the method `returning_customer_message()`, which is method you should write in the `Customer` class in `p3_db_classes.py`
+    - Call the method `returning_customer_message()`, which is method you should write in the `Customer` class in `p03_db_classes.py`
         - `returning_customer_message()` should print out:
             - `Welcome! You've had <number of appointments> appointments with us!`
         - If they've had no appointments, then the function should just end there and return `None` (which happens automatically if there's no return statement)
@@ -172,7 +174,7 @@
     - If `returning_customer_message()` returned an `Appointment` object, then ask:
         - `Do you want to continue with these same options? Enter 'Y' if so, otherwise enter 'N': `
         - If they enter `Y`, then use the same haircut_type and stylist when you create the `Appointment` in step 5.
-    - If either `returning_customer_message()` doeesn't return an `Appointment` object, or the user enters `N` (or anything other than `Y`) when asked about continueing with the previous options, then just proceed to choosing a hairstyle and stylist in step 4.
+    - If either `returning_customer_message()` doesn't return an `Appointment` object, or the user enters `N` (or anything other than `Y`) when asked about continuing with the previous options, then just proceed to choosing a hairstyle and stylist in step 4.
 
 3. If phone number isn't in the database, create a new customer
     - If the phone number isn't already in the database, then do the following:
@@ -183,7 +185,7 @@
     - Then using that information and the phone number originally entered, create a new customer in the database, and store the customer object in a variable.
 
 4. Choose a hairstyle and stylist
-    - New customers, or returning customers that didn't respond `Y` to using their previous choices, need to choose a hairstyle and stylist.
+    - New customers, existing customers that don't have any appointment data, or returning customers that didn't respond `Y` to using their previous choices, need to choose a hairstyle and stylist.
     - First, choose a hairstyle
         - You can use the included dictionary's keys as the choices for hairstyle
             - ```
@@ -227,7 +229,7 @@
         - `<stylist first name> <stylist last name> gave you a <hairstyle> haircut today!`
     - Ask whether they were satisfied. If they enter `Y`, store it as a `True` boolean value, otherwise `False`
         - `Are you satisfied? Enter Y or N: `
-    - Create an `Appointment` entry in the database using the `Appointment` class you already made in your `p3_db_classes.py` file.
+    - Create an `Appointment` entry in the database using the `Appointment` class you already made in your `p03_db_classes.py` file.
         - for `a_date_time`, set it equal to `datetime.today()`
         - `a_haircut_type` should be a string of the hairstyle they chose.
         - `a_payment` should be how much the haircut cost. See the included dictionary for what the price should be for each hairstyle.
