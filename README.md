@@ -1,17 +1,17 @@
 #### Project
 # Hair Salon
 - This is a group project. Through GitHub Classroom you should have created a shared GitHub repository with your group members, so as long as you upload your finished code to that group repository, each member in your team will get credit. You will also need to fill out a peer review survey on Learning Suite to recieve credit.
-- I do not provide automated tests for projects. You will need to determine yourself whether the code meets the requirements provided in the rubric. After you turn in your code, a combination of autograding and manual grading will be done (meaning partial credit may be given for certain requirements). The TAs will update the `Rubric.md` file with your grade and any comments that they have.
+- I do not provide automated tests for projects. You will need to determine yourself whether the code meets the requirements provided in the rubric, meaning partial credit may be given for certain requirements. The TAs will update the `Rubric.md` file with your grade and any comments that they have.
 - For this project, assume a local hair salon, Incredible Cuts, asked your team to create an app prototype for them. Up until now, they've just been recording their business data manually. They provided you a sample of that data in the `starting_hair_salon_data.xlsx` file. They want you to create a tool that lets their customers check in, as well as give managers access to important data.
 - This project is split up into 4 parts in 4 different files:
     - Part 1: Creating a database and classes with peewee
-        - Use the `p3_db_classes.py` file
+        - Use the `p03_db_classes.py` file
     - Part 2: Importing data from Excel into your database
-        - Use the `p3_data_import.py` file
+        - Use the `p03_data_import.py` file
     - Part 3: Writing a program for checking in to the hair salon
-        - Use the `p3_hair_salon.py` file
+        - Use the `p03_hair_salon.py` file
     - Part 4: Writing a program for manager tools
-        - Use the `p3_manager_tools.py` file
+        - Use the `p03_manager_tools.py` file
 - Important: Because you'll have multiple .py files open, make sure you save all your open files before running any single file.
     - You can go to File > Save All in VS Code to do this.
     - Or, the shortcut on Mac is `cmd + opt + s`
